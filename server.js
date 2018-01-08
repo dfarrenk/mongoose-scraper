@@ -33,11 +33,8 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 /*global Promise*/
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/mongooseScraper");
-
-
-
-
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongooseScraper";
+mongoose.connect(MONGODB_URI);
 
 // Routes
 
@@ -92,7 +89,7 @@ app.get("/articles", function(req, res) {
 });
 
 // Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", function(req, res) {
+app.get("/api/articles/:id", function(req, res) {
     // TODO
     // ====
     // Finish the route so it finds one article using the req.params.id,
@@ -111,7 +108,7 @@ app.get("/articles/:id", function(req, res) {
 });
 
 // Route for saving/updating an Article's associated Note
-app.post("/articles/:id", function(req, res) {
+app.post("/api/articles/:id", function(req, res) {
     // TODO
     // ====
     // save the new note that gets posted to the Notes collection
@@ -139,10 +136,9 @@ app.get("/saved", function(req, res) {
 app.get("/", function(req, res) {
     db.Article
         .find({})
-        // .sort({ _id: -1 })
+        .sort({ _id: -1 })
         .then(function(dbArticle) {
             var handlebarsObject = { article: dbArticle };
-            // res.json(handlebarsObject);
             res.render("index", handlebarsObject);
         })
         .catch(function(err) {

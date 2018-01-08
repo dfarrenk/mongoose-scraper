@@ -4,26 +4,12 @@ $(document).ready(function() {
     // Adding event listeners to any dynamically generated "save article"
     // and "scrape new article" buttons
     //   var articleContainer = $(".article-container");
-    //   $(document).on("click", ".btn.save", handleArticleSave);
+    $(document).on("click", ".btn.save", handleArticleSave);
     $(document).on("click", ".scrape-new", handleArticleScrape);
-
     // Once the page is ready, run the initPage function to kick things off
     //   initPage();
 
-    //   function initPage() {
-    //     // Empty the article container, run an AJAX request for any unsaved headlines
-    //     articleContainer.empty();
-    //     $.get("/api/headlines?saved=false").then(function(data) {
-    //       // If we have headlines, render them to the page
-    //       if (data && data.length) {
-    //         renderArticles(data);
-    //       }
-    //       else {
-    //         // Otherwise render a message explaing we have no articles
-    //         renderEmpty();
-    //       }
-    //     });
-    //   }
+
 
     // function renderArticles(articles) {
     //     // This function handles appending HTML containing our article data to the page
@@ -92,35 +78,33 @@ $(document).ready(function() {
     //     articleContainer.append(emptyAlert);
     //   }
 
-    //   function handleArticleSave() {
-    //     // This function is triggered when the user wants to save an article
-    //     // When we rendered the article initially, we attatched a javascript object containing the headline id
-    //     // to the element using the .data method. Here we retrieve that.
-    //     var articleToSave = $(this).parents(".panel").data();
-    //     articleToSave.saved = true;
-    //     // Using a patch method to be semantic since this is an update to an existing record in our collection
-    //     $.ajax({
-    //       method: "PUT",
-    //       url: "/api/headlines",
-    //       data: articleToSave
-    //     }).then(function(data) {
-    //       // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
-    //       // (which casts to 'true')
-    //       if (data.ok) {
-    //         // Run the initPage function again. This will reload the entire list of articles
-    //         initPage();
-    //       }
-    //     });
-    //   }
+
+
+    function handleArticleSave() {
+        // This function is triggered when the user wants to save an article
+        // When we rendered the article initially, we attatched a javascript object containing the headline id
+        // to the element using the .data method. Here we retrieve that.
+        //   var articleToSave = $(this).parents(".panel").data();
+        //   articleToSave.saved = true;
+        //   // Using a patch method to be semantic since this is an update to an existing record in our collection
+        //   $.ajax({
+        //       method: "PUT",
+        //       url: "/api/headlines",
+        //       data: articleToSave
+        //   }).then(function(data) {
+        //       // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
+        //       // (which casts to 'true')
+        //       if (data.ok) {
+        //           // Run the initPage function again. This will reload the entire list of articles
+        //           initPage();
+        //       }
+        //   });
+    }
 
     function handleArticleScrape() {
         // This function handles the user clicking any "scrape new article" buttons
         $.get("/api/scrape").then(function(data) {
-            // If we are able to succesfully scrape the NYTIMES and compare the articles to those
-            // already in our collection, re render the articles on the page
-            // and let the user know how many unique articles we were able to save
-            // initPage();
-            bootbox.alert("<h3 class='text-center m-top-80'>" + data.message + "<h3>");
+            bootbox.alert("<h3 class='text-center m-top-80'> Articles scraped <h3>");
             console.log("Scraped");
         });
     }
