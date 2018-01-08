@@ -130,6 +130,24 @@ app.post("/articles/:id", function(req, res) {
         });
 });
 
+app.get("/saved", function(req, res) {
+    res.render("saved");
+});
+
+app.get("/", function(req, res) {
+    db.Article
+        .find({})
+        .sort({ _id: -1 })
+        .then(function(dbArticle) {
+            var handlebarsObject = { article: dbArticle };
+            // res.json(handlebarsObject);
+            res.render("index", handlebarsObject);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+});
+
 // Start the server
 app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
