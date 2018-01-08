@@ -57,15 +57,15 @@ app.get("/api/scrape", function(req, res) {
                 .children("a")
                 .attr("href");
             result.snippet = $(this)
-                .next()
+                .parent()
+                .children(".blurb")
                 .text();
 
             // Create a new Article using the `result` object built from scraping
             db.Article
                 .create(result)
                 .then(function(dbArticle) {
-                    // If we were able to successfully scrape and save an Article, send a message to the client
-                    res.send("Scrape Complete");
+
                 })
                 .catch(function(err) {
                     // If an error occurred, send it to the client
@@ -107,6 +107,30 @@ app.get("/api/articles/:id", function(req, res) {
 
 });
 
+// Route for saving an article
+app.post("/api/save/:id", function(req, res) {
+    let articleID = req.params.id;
+    let articleToSave = {};
+    db.Article
+        .findById(articleID)
+        .then(function(dbArticle) {
+            console.log(dbArticle);
+        });
+    // db.Note
+    //     .create(req.body)
+    //     .then(function(dbNote) {
+    //         return db.Article.findOneAndUpdate({ "_id": req.params.id }, { $push: { "note": dbNote._id } }, { new: true });
+    //     }).then(function(dbArticle) {
+    //         // If the User was updated successfully, send it back to the client
+    //         console.log("Updated");
+    //         res.json(dbArticle);
+    //     })
+    //     .catch(function(err) {
+    //         // If an error occurs, send it back to the client
+    //         res.json(err);
+    // });
+});
+
 // Route for saving/updating an Article's associated Note
 app.post("/api/articles/:id", function(req, res) {
     // TODO
@@ -136,7 +160,6 @@ app.get("/saved", function(req, res) {
 app.get("/", function(req, res) {
     db.Article
         .find({})
-        .sort({ _id: -1 })
         .then(function(dbArticle) {
             var handlebarsObject = { article: dbArticle };
             res.render("index", handlebarsObject);

@@ -8,7 +8,8 @@ var Schema = mongoose.Schema;
 var ArticleSchema = new Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     link: {
         type: String,
@@ -18,6 +19,9 @@ var ArticleSchema = new Schema({
         type: String,
         required: true
     }
+}, {
+    timestamps: { createdAt: 'created_at' }
+
 });
 
 // This creates our model from the above schema, using mongoose's model method

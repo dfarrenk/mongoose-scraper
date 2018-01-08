@@ -81,30 +81,32 @@ $(document).ready(function() {
 
 
     function handleArticleSave() {
+        // bootbox.alert("<h3 class='text-center m-top-80'> Push leetle button <h3>");
         // This function is triggered when the user wants to save an article
         // When we rendered the article initially, we attatched a javascript object containing the headline id
         // to the element using the .data method. Here we retrieve that.
-        //   var articleToSave = $(this).parents(".panel").data();
-        //   articleToSave.saved = true;
-        //   // Using a patch method to be semantic since this is an update to an existing record in our collection
-        //   $.ajax({
-        //       method: "PUT",
-        //       url: "/api/headlines",
-        //       data: articleToSave
-        //   }).then(function(data) {
-        //       // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
-        //       // (which casts to 'true')
-        //       if (data.ok) {
-        //           // Run the initPage function again. This will reload the entire list of articles
-        //           initPage();
-        //       }
-        //   });
+        let articleToSave = $(this).attr("data-target");
+        bootbox.alert(`<p> Saving article :  ${articleToSave} </p>`);
+        $.post(`/api/save/${articleToSave}`);
+        // Using a patch method to be semantic since this is an update to an existing record in our collection
+        // $.ajax({
+        //     method: "PUT",
+        //     url: "/api/headlines",
+        //     data: articleToSave
+        // }).then(function(data) {
+        //     // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
+        //     // (which casts to 'true')
+        //     if (data.ok) {
+        //         // Run the initPage function again. This will reload the entire list of articles
+        //     }
+        // });
     }
 
     function handleArticleScrape() {
         // This function handles the user clicking any "scrape new article" buttons
+        // Call scrape route, present modal, then reload.
         $.get("/api/scrape").then(function(data) {
-            bootbox.alert("<h3 class='text-center m-top-80'> Articles scraped <h3>");
+            bootbox.alert("<h3 class='text-center m-top-80'> Articles scraped <h3>", function() { location.reload() });
             console.log("Scraped");
         });
     }
