@@ -1,4 +1,4 @@
-/* gloabl bootbox */
+/* global bootbox */
 $(document).ready(function() {
     // Setting a reference to the article-container div where all the dynamic content will go
     // Adding event listeners to any dynamically generated "save article"
@@ -120,7 +120,7 @@ $(document).ready(function() {
             // already in our collection, re render the articles on the page
             // and let the user know how many unique articles we were able to save
             // initPage();
-            // bootbox.alert("<h3 class='text-center m-top-80'>" + data.message + "<h3>");
+            bootbox.alert("<h3 class='text-center m-top-80'>" + data.message + "<h3>");
             console.log("Scraped");
         });
     }

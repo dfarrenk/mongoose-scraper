@@ -33,9 +33,11 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 /*global Promise*/
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/mongooseScraper", {
-    useMongoClient: true
-});
+mongoose.connect("mongodb://localhost/mongooseScraper");
+
+
+
+
 
 // Routes
 
@@ -137,14 +139,15 @@ app.get("/saved", function(req, res) {
 app.get("/", function(req, res) {
     db.Article
         .find({})
-        .sort({ _id: -1 })
+        // .sort({ _id: -1 })
         .then(function(dbArticle) {
             var handlebarsObject = { article: dbArticle };
             // res.json(handlebarsObject);
             res.render("index", handlebarsObject);
         })
         .catch(function(err) {
-            res.json(err);
+            res.render("index");
+            console.log(err);
         });
 });
 
