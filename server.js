@@ -109,26 +109,34 @@ app.get("/api/articles/:id", function(req, res) {
 
 // Route for saving an article
 app.post("/api/save/:id", function(req, res) {
-    let articleID = req.params.id;
-    let articleToSave = {};
+    let articleID = req.params.data;
+    console.log(`Deleting ${articleID}`);
+    let articleToSave;
     db.Article
         .findById(articleID)
         .then(function(dbArticle) {
-            console.log(dbArticle);
+            let { title, link, snippet } = dbArticle;
+            // articleToSave = dbArticle.map(x => x);
+            articleToSave = { title: title, link: link, snippet: snippet, notes: [] };
+            console.log(articleToSave);
+            db.SavedArticle
+                .create(articleToSave);
         });
-    // db.Note
-    //     .create(req.body)
-    //     .then(function(dbNote) {
-    //         return db.Article.findOneAndUpdate({ "_id": req.params.id }, { $push: { "note": dbNote._id } }, { new: true });
-    //     }).then(function(dbArticle) {
-    //         // If the User was updated successfully, send it back to the client
-    //         console.log("Updated");
-    //         res.json(dbArticle);
-    //     })
-    //     .catch(function(err) {
-    //         // If an error occurs, send it back to the client
-    //         res.json(err);
-    // });
+});
+
+app.delete("/api/delete", function(req, res) {
+    let articleID = req.body.id;
+    db.SavedArticle
+        .findByIdAndRemove({ "_id": articleID })
+        .then(function(dbArticle) {
+            // If the User was updated successfully, send it back to the client
+            console.log(`Deleted ${articleID}`);
+            res.json(dbArticle);
+        })
+        .catch(function(err) {
+            // If an error occurs, send it back to the client
+            res.json(err);
+        });
 });
 
 // Route for saving/updating an Article's associated Note
@@ -154,7 +162,16 @@ app.post("/api/articles/:id", function(req, res) {
 });
 
 app.get("/saved", function(req, res) {
-    res.render("saved");
+    db.SavedArticle
+        .find({})
+        .then(function(dbArticle) {
+            var handlebarsObject = { article: dbArticle };
+            res.render("saved", handlebarsObject);
+        })
+        .catch(function(err) {
+            res.render("saved");
+            console.log(err);
+        });
 });
 
 app.get("/", function(req, res) {

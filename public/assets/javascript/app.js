@@ -6,6 +6,8 @@ $(document).ready(function() {
     //   var articleContainer = $(".article-container");
     $(document).on("click", ".btn.save", handleArticleSave);
     $(document).on("click", ".scrape-new", handleArticleScrape);
+    $(document).on("click", ".btn.delete", handleArticleDelete);
+    // $(document).on("click", ".btn.delete", handleArticleDelete);
     // Once the page is ready, run the initPage function to kick things off
     //   initPage();
 
@@ -108,6 +110,19 @@ $(document).ready(function() {
         $.get("/api/scrape").then(function(data) {
             bootbox.alert("<h3 class='text-center m-top-80'> Articles scraped <h3>", function() { location.reload() });
             console.log("Scraped");
+        });
+    }
+
+    function handleArticleDelete() {
+        let articleToDelete = $(this).attr("data-target");
+        // $.delete(`/api/delete/${articleToDelete}`);
+
+        $.ajax({
+            method: "DELETE",
+            url: "/api/delete",
+            data: { id: articleToDelete }
+        }).then(function(data) {
+            bootbox.alert(`<p> Deleting article :  ${articleToDelete} </p>`, function() { location.reload() });
         });
     }
 });
