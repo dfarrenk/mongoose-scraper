@@ -109,18 +109,21 @@ app.get("/api/articles/:id", function(req, res) {
 
 // Route for saving an article
 app.post("/api/save/:id", function(req, res) {
-    let articleID = req.params.data;
-    console.log(`Deleting ${articleID}`);
+    let articleID = req.params.id;
     let articleToSave;
     db.Article
         .findById(articleID)
         .then(function(dbArticle) {
+            console.log("Reached savepoint");
             let { title, link, snippet } = dbArticle;
             // articleToSave = dbArticle.map(x => x);
             articleToSave = { title: title, link: link, snippet: snippet, notes: [] };
             console.log(articleToSave);
             db.SavedArticle
-                .create(articleToSave);
+                .create(articleToSave)
+                .then(function() {
+                    console.log(`Saved ${articleID}`);
+                });
         });
 });
 

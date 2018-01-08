@@ -4,9 +4,9 @@ $(document).ready(function() {
     // Adding event listeners to any dynamically generated "save article"
     // and "scrape new article" buttons
     //   var articleContainer = $(".article-container");
-    $(document).on("click", ".btn.save", handleArticleSave);
+    $(document).on("click", ".save", handleArticleSave);
     $(document).on("click", ".scrape-new", handleArticleScrape);
-    $(document).on("click", ".btn.delete", handleArticleDelete);
+    $(document).on("click", ".delete", handleArticleDelete);
     // $(document).on("click", ".btn.delete", handleArticleDelete);
     // Once the page is ready, run the initPage function to kick things off
     //   initPage();
