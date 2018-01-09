@@ -200,20 +200,18 @@ app.delete("/api/notes/", function(req, res) {
 
     let noteId = req.body.noteId;
     let articleId = req.body.articleId;
-    // db.Note
-    //     .findByIdAndRemove(noteId)
-    //     .then(function() {
-    //         console.log("deleting");
-    //         res.send("Done?");
-    //     });
+
     db.SavedArticle
-        .findById(articleId)
-        .then(function(dbArticle) {
-            console.log("Halp");
-            dbArticle.notes = dbArticle.notes.filter(function(box) {
-                return box.boxId !== noteId;
-            });
+        .findOneAndUpdate(articleId, { $pull: { notes: noteId } }, function() {
+            db.Note
+                .findByIdAndRemove(noteId)
+                .then(function() {
+                    console.log("deleting");
+                    res.send("Done?");
+                });
         });
+
+
 });
 
 app.get("/saved", function(req, res) {
