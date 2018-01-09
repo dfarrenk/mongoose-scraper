@@ -126,6 +126,8 @@ app.post("/api/save/:id", function(req, res) {
         });
 });
 
+
+// Route for deleting a saved article
 app.delete("/api/delete", function(req, res) {
     let articleID = req.body.id;
     db.SavedArticle
@@ -151,7 +153,7 @@ app.post("/api/articles/:id", function(req, res) {
     db.Note
         .create(req.body)
         .then(function(dbNote) {
-            return db.Article.findOneAndUpdate({ "_id": req.params.id }, { $push: { "note": dbNote._id } }, { new: true });
+            return db.SavedArticle.findOneAndUpdate({ "_id": req.params.id }, { $push: { "notes": dbNote._id } }, { new: true });
         }).then(function(dbArticle) {
             // If the User was updated successfully, send it back to the client
             console.log("Updated");
@@ -162,6 +164,45 @@ app.post("/api/articles/:id", function(req, res) {
             res.json(err);
         });
 });
+
+// Route for retrieving article notes
+// app.get("/api/notes/:id", function(req, res) {
+//     let savedArticleID = req.params.id;
+//     db.SavedArticle
+//         .findById(savedArticleID)
+//         .then(function(dbArticle) {
+//             let notes = dbArticle.notes;
+//             res.send(notes);
+//         }).catch(function(err) {
+//             // If an error occurs, send it back to the client
+//             res.json(err);
+//         });
+// });
+
+app.get("/api/notes/:id", function(req, res) {
+    let savedArticleID = req.params.id;
+    let notes = [];
+    db.SavedArticle
+        .findById(savedArticleID)
+        .then(function(dbArticle) {
+            dbArticle.notes.forEach(function(datum) {
+                db.Note
+                    .findById(datum)
+                    .then(function(dbNote) {
+                        notes.push(dbNote.body);
+                        if (notes.length === dbArticle.notes.length) {
+                            console.log(notes);
+                            res.send(notes);
+                        }
+                    });
+            });
+        })
+        .catch(function(err) {
+            // If an error occurs, send it back to the client
+            res.json(err);
+        });
+});
+
 
 app.get("/saved", function(req, res) {
     db.SavedArticle
