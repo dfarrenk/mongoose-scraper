@@ -9,30 +9,16 @@ $(document).ready(function() {
     $(document).on("click", ".delete", handleArticleDelete);
     $(document).on("click", ".notes", handleArticleNotes);
     $(document).on("click", ".save-note", handleNoteSave);
+    $(document).on("click", ".note-delete", handleNoteDelete);
     // $(document).on("click", ".btn.delete", handleArticleDelete);
     // Once the page is ready, run the initPage function to kick things off
     //   initPage();
 
+    // Save an article
     function handleArticleSave() {
-        // bootbox.alert("<h3 class='text-center m-top-80'> Push leetle button <h3>");
-        // This function is triggered when the user wants to save an article
-        // When we rendered the article initially, we attatched a javascript object containing the headline id
-        // to the element using the .data method. Here we retrieve that.
         let articleToSave = $(this).attr("data-target");
         bootbox.alert(`<p> Saving article :  ${articleToSave} </p>`);
         $.post(`/api/save/${articleToSave}`);
-        // Using a patch method to be semantic since this is an update to an existing record in our collection
-        // $.ajax({
-        //     method: "PUT",
-        //     url: "/api/headlines",
-        //     data: articleToSave
-        // }).then(function(data) {
-        //     // If successful, mongoose will send back an object containing a key of "ok" with the value of 1
-        //     // (which casts to 'true')
-        //     if (data.ok) {
-        //         // Run the initPage function again. This will reload the entire list of articles
-        //     }
-        // });
     }
 
     function handleArticleScrape() {
@@ -83,7 +69,7 @@ $(document).ready(function() {
             });
 
             data.forEach(function(datum) {
-                $(".note-container").append(`<li class="list-group-item note">${datum}<button class="btn btn-danger note-delete">x</button></li>`);
+                $(".note-container").append(`<li class="list-group-item note">${datum.body}<button class="btn btn-danger note-delete" data-article=${currentArticle} data-note=${datum.id}>x</button></li>`);
             });
         });
     }
@@ -98,6 +84,18 @@ $(document).ready(function() {
             data: { body: text }
         }).then(function(data) {
             bootbox.alert(`<p> Notes updated </p>`, function() { location.reload() });
+        });
+    }
+
+    function handleNoteDelete() {
+        let noteId = $(this).attr("data-note");
+        let articleId = $(this).attr("data-article");
+        $.ajax({
+            method: "DELETE",
+            url: "/api/notes/",
+            data: { noteId: noteId, articleId: articleId }
+        }).then(function(data) {
+            bootbox.alert(`<p> Note deleted </p>`, function() { location.reload() });
         });
     }
 });

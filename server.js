@@ -117,7 +117,7 @@ app.post("/api/save/:id", function(req, res) {
             let { title, link, snippet } = dbArticle;
             // articleToSave = dbArticle.map(x => x);
             articleToSave = { title: title, link: link, snippet: snippet, notes: [] };
-            console.log(articleToSave);
+            // console.log(articleToSave);
             db.SavedArticle
                 .create(articleToSave)
                 .then(function() {
@@ -166,32 +166,25 @@ app.post("/api/articles/:id", function(req, res) {
 });
 
 // Route for retrieving article notes
-// app.get("/api/notes/:id", function(req, res) {
-//     let savedArticleID = req.params.id;
-//     db.SavedArticle
-//         .findById(savedArticleID)
-//         .then(function(dbArticle) {
-//             let notes = dbArticle.notes;
-//             res.send(notes);
-//         }).catch(function(err) {
-//             // If an error occurs, send it back to the client
-//             res.json(err);
-//         });
-// });
-
 app.get("/api/notes/:id", function(req, res) {
     let savedArticleID = req.params.id;
     let notes = [];
     db.SavedArticle
         .findById(savedArticleID)
         .then(function(dbArticle) {
+
+            if (dbArticle.notes.length == 0) {
+                res.send(notes);
+            }
+
+
             dbArticle.notes.forEach(function(datum) {
                 db.Note
                     .findById(datum)
                     .then(function(dbNote) {
-                        notes.push(dbNote.body);
+                        let noteInfo = { id: datum, body: dbNote.body };
+                        notes.push(noteInfo);
                         if (notes.length === dbArticle.notes.length) {
-                            console.log(notes);
                             res.send(notes);
                         }
                     });
@@ -203,6 +196,25 @@ app.get("/api/notes/:id", function(req, res) {
         });
 });
 
+app.delete("/api/notes/", function(req, res) {
+
+    let noteId = req.body.noteId;
+    let articleId = req.body.articleId;
+    // db.Note
+    //     .findByIdAndRemove(noteId)
+    //     .then(function() {
+    //         console.log("deleting");
+    //         res.send("Done?");
+    //     });
+    db.SavedArticle
+        .findById(articleId)
+        .then(function(dbArticle) {
+            console.log("Halp");
+            dbArticle.notes = dbArticle.notes.filter(function(box) {
+                return box.boxId !== noteId;
+            });
+        });
+});
 
 app.get("/saved", function(req, res) {
     db.SavedArticle
