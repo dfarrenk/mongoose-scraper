@@ -59,7 +59,7 @@ $(document).ready(function() {
                 "<ul class='list-group note-container'>",
                 "</ul>",
                 "<textarea class='note-field' placeholder='New Note' rows='4' cols='60'></textarea>",
-                `<button class='btn btn-success save-note' data-target=${currentArticle}>Save Note</button>`,
+                `<button class='btn btn-success save-note' data-dismiss="modal" data-target=${currentArticle}>Save Note</button>`,
                 "</div>"
             ].join("");
             // Adding the formatted HTML to the note modal
@@ -69,7 +69,7 @@ $(document).ready(function() {
             });
 
             data.forEach(function(datum) {
-                $(".note-container").append(`<li class="list-group-item note">${datum.body}<button class="btn btn-danger note-delete" data-article=${currentArticle} data-note=${datum.id}>x</button></li>`);
+                $(".note-container").append(`<li class="list-group-item note">${datum.body}<button class="btn btn-danger note-delete" data-article=${currentArticle} data-note=${datum.id} data-dismiss="modal">x</button></li>`);
             });
         });
     }
@@ -83,7 +83,7 @@ $(document).ready(function() {
             url: "/api/articles/" + thisId,
             data: { body: text }
         }).then(function(data) {
-            bootbox.alert(`<p> Notes updated </p>`, function() { location.reload() });
+            bootbox.alert(`<p> Notes updated </p>`, function() {});
         });
     }
 
@@ -95,7 +95,7 @@ $(document).ready(function() {
             url: "/api/notes/",
             data: { noteId: noteId, articleId: articleId }
         }).then(function(data) {
-            bootbox.alert(`<p> Note deleted </p>`, function() { location.reload() });
+            bootbox.alert(`<p> Note deleted </p>`, function() {});
         });
     }
 });
