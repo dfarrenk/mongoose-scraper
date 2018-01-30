@@ -5,6 +5,6 @@ A program that scrapes article headlines & bylines from the Washington Post and 
 ## Built With
 
 * [Mongoose](http://mongoosejs.com/) - Database
-* [Cheerio] (https://cheerio.js.org/) - Data traversal
+* [Cheerio](https://cheerio.js.org/) - Data traversal
 * [Bootstrap](https://getbootstrap.com/) - HTML Framework
 
